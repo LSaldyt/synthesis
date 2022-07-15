@@ -76,21 +76,25 @@ def filter_observationally_equivalent(language, programs, inputs):
             yield program
 
 def bottom_up_explicit(language, inputs, outputs):
-    programs = language.initial()
+    programs = list(language.initial())
     while True:
-        programs.extend(language.grow(programs))
-        programs = filter_observationally_equivalent(programs)
+        programs.extend(list(language.grow(programs)))
+        programs = list(filter_observationally_equivalent(language, programs, inputs))
         for program in programs:
             if language.interpret(program) == outputs:
                 return program
 
 def main():
     language = StringLanguage()
-    programs = list(language.initial())
-    for i in range(3):
-        for program in programs:
-            print(language.render(program))
-        programs.extend(list(language.grow(programs)))
+    # programs = list(language.initial())
+    # for i in range(3):
+    #     for program in programs:
+    #         print(language.render(program))
+    #     programs.extend(list(language.grow(programs)))
+    # target = 'aaa'
+    target = 'ababab'
+    result = bottom_up_explicit(language, '', target)
+    print(language.render(result), ' -> ', target)
 
 if __name__ == '__main__':
     main()
